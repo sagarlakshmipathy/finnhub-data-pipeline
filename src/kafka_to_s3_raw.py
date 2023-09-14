@@ -1,18 +1,13 @@
-import boto3
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
-from src.common.schema import finnhub_schema
-
-ssm_client = boto3.client("ssm")
-bucket_name = ssm_client.get_parameter(Name="finnhub-bucket-name")["Parameter"]["Value"]
-bootstrap_server = ssm_client.get_parameter(Name="finnhub-bootstrap-server")["Parameter"]["Value"]
-kafka_topic = ssm_client.get_parameter(Name="finnhub-kafka-topic")["Parameter"]["Value"]
+from src.common.schema import *
+from src.common.params import *
 
 def read_from_kafka(spark):
     return spark.readStream \
         .format("kafka") \
-        .option("kafka.bootstrap.servers", "localhost:9092") \
-        .option("subscribe", "finnhub") \
+        .option("kafka.bootstrap.servers", bootstrap_server) \
+        .option("subscribe", kafka_topic) \
         .load()
 
 
@@ -33,8 +28,8 @@ def write_raw_to_s3(spark):
 if __name__ == '__main__':
     spark = SparkSession.builder \
         .appName("Raw Data Loader") \
-        .config("spark.jars", "/Users/sagarl/dependencies/pyspark/spark-sql-kafka-0-10_2.12-3.3.1.jar") \
-        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1,org.apache.hadoop:hadoop-aws:3.3.1") \
+        .config("spark.jars", spark_kafka_jar_path) \
+        .config("spark.jars.packages", spark_jar_packages) \
         .master("local[2]") \
         .getOrCreate()
 

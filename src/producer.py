@@ -1,14 +1,7 @@
 import json
 import websocket
-import boto3
 from confluent_kafka import Producer
-
-sm_client = boto3.client("secretsmanager")
-ssm_client = boto3.client("ssm")
-
-api_key = sm_client.get_secret_value(SecretId="finnhub-api-key")["SecretString"]
-kafka_topic = ssm_client.get_parameter(Name="finnhub-kafka-topic")["Parameter"]["Value"]
-bootstrap_server = ssm_client.get_parameter(Name="finnhub-bootstrap-server")["Parameter"]["Value"]
+from src.common.params import *
 
 kafka_config = {
     "bootstrap.servers": bootstrap_server,
