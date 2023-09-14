@@ -3,6 +3,7 @@ from pyspark.sql.functions import *
 from src.common.schema import *
 from src.common.params import *
 
+
 def read_from_kafka(spark):
     return spark.readStream \
         .format("kafka") \
@@ -28,8 +29,8 @@ def write_raw_to_s3(spark):
 if __name__ == '__main__':
     spark = SparkSession.builder \
         .appName("Raw Data Loader") \
-        .config("spark.jars", spark_kafka_jar_path) \
         .config("spark.jars.packages", spark_jar_packages) \
+        .config("fs.s3a.aws.credentials.provider", aws_credentials_provider) \
         .master("local[2]") \
         .getOrCreate()
 
