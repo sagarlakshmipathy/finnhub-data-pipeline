@@ -2,28 +2,25 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from src.common.schema import *
 from src.common.params import *
+from src.common.utils import *
 
 
-def read_from_kafka(spark):
-    return spark.readStream \
+def read_from_kafka(spark_session):
+    return spark_session.readStream \
         .format("kafka") \
         .option("kafka.bootstrap.servers", bootstrap_server) \
         .option("subscribe", kafka_topic) \
         .load()
 
 
-def write_raw_to_s3(spark):
-    raw_data = read_from_kafka(spark) \
+def write_to_s3_raw(spark_session, bucket_name):
+    raw_df = read_from_kafka(spark_session)
+    df_with_schema = raw_df \
         .select(from_json(col("value").cast(StringType()), finnhub_schema).alias("data")) \
         .select("data.*")
 
-    raw_data.writeStream \
-        .format("json") \
-        .outputMode("append") \
-        .option("path", f"s3a://{bucket_name}/output") \
-        .option("checkpointLocation", f"s3a://{bucket_name}/checkpoint") \
-        .start() \
-        .awaitTermination()
+    write_to_s3(df_with_schema, bucket_name, "raw")
+    # write_to_console_append(df_with_schema)
 
 
 if __name__ == '__main__':
@@ -34,4 +31,4 @@ if __name__ == '__main__':
         .master("local[2]") \
         .getOrCreate()
 
-    write_raw_to_s3(spark)
+    write_to_s3_raw(spark, "finnhub-data-pipeline")

@@ -10,6 +10,7 @@ bucket_name = ssm_client.get_parameter(Name="finnhub-bucket-name")["Parameter"][
 spark_jar_packages = (
     "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,"
     "org.apache.hadoop:hadoop-aws:3.3.1,"
-    "org.apache.spark:spark-streaming-kafka-0-10_2.12:3.4.1"
+    "org.apache.spark:spark-streaming-kafka-0-10_2.12:3.4.1,"
+    "org.apache.hudi:hudi-spark-bundle_2.12:0.13.1"
 )
 aws_credentials_provider = "com.amazonaws.auth.DefaultAWSCredentialsProviderChain"
