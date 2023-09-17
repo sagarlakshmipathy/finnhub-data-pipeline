@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from common.schema import *
-from common.params import *
+from src.common.params import *
 
 
 def read_from_kafka(spark_session):
