@@ -14,16 +14,16 @@ bucket_name = ssm_client.get_parameter(Name="finnhub-bucket-name")["Parameter"][
 # local_checkpoint = "/Users/sagarl/IdeaProjects/finnhub-data-pipeline/experimentation/tmp/checkpoint/finnhub"
 
 # jars and configs
-# spark_jar_packages = (
-#     "org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.3,"
-#     "org.apache.hadoop:hadoop-aws:3.3.1,"
-#     "org.apache.spark:spark-streaming-kafka-0-10_2.12:3.3.3,"
-#     "org.apache.hudi:hudi-spark3.3-bundle_2.12:0.13.1"
-# )
-#
-# spark_serializer = "org.apache.spark.serializer.KryoSerializer"
-# spark_sql_catalog_spark_catalog = "org.apache.spark.sql.hudi.catalog.HoodieCatalog"
-# spark_sql_extensions = "org.apache.spark.sql.hudi.HoodieSparkSessionExtension"
+spark_jar_packages = (
+    "org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.3,"
+    "org.apache.hadoop:hadoop-aws:3.3.3,"
+    "org.apache.spark:spark-streaming-kafka-0-10_2.12:3.3.3,"
+    "org.apache.hudi:hudi-spark3.3-bundle_2.12:0.13.1"
+)
+
+spark_serializer = "org.apache.spark.serializer.KryoSerializer"
+spark_sql_catalog_spark_catalog = "org.apache.spark.sql.hudi.catalog.HoodieCatalog"
+spark_sql_extensions = "org.apache.spark.sql.hudi.HoodieSparkSessionExtension"
 
 table_name = "finnhub_data"
 
@@ -36,3 +36,5 @@ hudi_options = {
     "hoodie.datasource.write.table.name": table_name,
     "hoodie.datasource.write.operation": "upsert"
 }
+
+aws_credentials_provider = "com.amazonaws.auth.profile.ProfileCredentialsProvider"

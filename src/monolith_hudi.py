@@ -63,6 +63,11 @@ def add_uuid(spark_session, schema):
 if __name__ == "__main__":
     spark = SparkSession.builder \
         .appName("Monolith Application") \
+        .config("spark.jars.packages", spark_jar_packages) \
+        .config("spark.serializer", spark_serializer) \
+        .config("spark.sql.catalog.spark.catalog", spark_sql_catalog_spark_catalog) \
+        .config("spark.sql.extensions", spark_sql_extensions) \
+        .config("spark.hadoop.fs.s3a.aws.credentials.provider", aws_credentials_provider) \
         .master("local[2]") \
         .getOrCreate()
 
